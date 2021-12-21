@@ -20,7 +20,7 @@ contract DRIVENOwnerGuard {
     // ADDRESS OF THE DEPLOYER
     address private owner;
 
-    // ADDRESS OF THE 2nd ADDRESS THAT WILL NEED TO
+    // 2nd ADDRESS THAT WILL NEED TO
     // ALLOW CHANGES TO BE MADE ON THE SMART CONTRACT
     address private approver;
 
