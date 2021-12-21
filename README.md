@@ -17,7 +17,7 @@ their tokens.
 3) isBlocked[msg.sender] or setStatusForAddress function
 Use this sintax / function when you want to blacklist an addres (as we did on the allowChanges function)
 
-=== IMPORT THE SMART CONTRACT IN SOLIDITY ===
+<b>=== IMPORT THE SMART CONTRACT IN SOLIDITY === </b>
 import "https://github.com/polthemarketer/DRIVENOwnerGuard/blob/main/DRIVENOwnerGuard.sol";
 
 === INHEREIT THE SMART CONTRACT === 
