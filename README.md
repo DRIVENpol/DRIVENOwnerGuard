@@ -20,6 +20,6 @@ Use this sintax / function when you want to blacklist an addres (as we did on th
 <b>=== IMPORT THE SMART CONTRACT IN SOLIDITY === </b>
 <br>import "https://github.com/polthemarketer/DRIVENOwnerGuard/blob/main/DRIVENOwnerGuard.sol";
 
-<b>=== INHEREIT THE SMART CONTRACT === </b>
+<b>=== INHEREIT THE SMART CONTRACT === </b><br>
 contract myContract is DRIVENOwnerGuard {
 }
