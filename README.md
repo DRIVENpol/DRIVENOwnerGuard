@@ -1,3 +1,5 @@
+DRIVENsecurity TEAM INTRODUCED A NEW MECHANISM THAT WILL USE A SECOND ADDRESS TO ALLOW THE ORIGINAL OWNER TO CALL ADMIN-ONLY FUNCTIONS
+
 === EXAMPLES ===
 
 1) require(approve == true) AND require(isBlocked[msg.sender] == false)
