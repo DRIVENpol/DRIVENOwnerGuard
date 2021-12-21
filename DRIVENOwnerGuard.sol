@@ -1,20 +1,10 @@
 //  PLEASE READ EVERY COMMENT TO FULLY UNDERSTAND THE UTILITY OF THIS SMART CONTRACT
-
 //Created by DRIVENecosystem
+
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-
-// DRIVENsecurity TEAM INTRODUCED A NEW MECHANISM THAT WILL USE
-// A SECOND ADDRESS TO ALLOW THE ORIGINAL OWNER TO CALL
-// ADMIN-ONLY FUNCTIONS
-
-// [NOTE] VERY-IMPORTANT
-// FEEL FREE TO USE "isBlocked[msg.sender]" , "require(isBlocked[msg.sender] == false);" and  "require(approve == true)"
-// IN THE MOST IMPORTANT FUNCTION OF YOUR SMART CONTRACT
-// WE WILL COVER SOME EXAMPLES ABOUT THERE: https://github.com/polthemarketer/DRIVENOwnerGuard/blob/main/README.md
-
 
 
 // ==== THE BEGINNING OF DRIVEN OWNER GUARD SMART CONTRACT
