@@ -1,6 +1,6 @@
-DRIVENsecurity TEAM INTRODUCED A NEW MECHANISM THAT WILL USE A SECOND ADDRESS TO ALLOW THE ORIGINAL OWNER TO CALL ADMIN-ONLY FUNCTIONS
+<b><i>DRIVENsecurity TEAM INTRODUCED A NEW MECHANISM THAT WILL USE A SECOND ADDRESS TO ALLOW THE ORIGINAL OWNER TO CALL ADMIN-ONLY FUNCTIONS</b></i>
 
-=== EXAMPLES ===
+<b>=== EXAMPLES ===</b>
 
 1) require(approve == true) AND require(isBlocked[msg.sender] == false)
 Use this sintax on very-important functions of your own smart contract + onlyOwner modifier
@@ -18,8 +18,8 @@ their tokens.
 Use this sintax / function when you want to blacklist an addres (as we did on the allowChanges function)
 
 <b>=== IMPORT THE SMART CONTRACT IN SOLIDITY === </b>
-import "https://github.com/polthemarketer/DRIVENOwnerGuard/blob/main/DRIVENOwnerGuard.sol";
+<br>import "https://github.com/polthemarketer/DRIVENOwnerGuard/blob/main/DRIVENOwnerGuard.sol";
 
-=== INHEREIT THE SMART CONTRACT === 
+<b>=== INHEREIT THE SMART CONTRACT === </b>
 contract myContract is DRIVENOwnerGuard {
 }
