@@ -1,11 +1,17 @@
-//  PLEASE READ EVERY COMMENT TO FULLY UNDERSTAND THE UTILITY OF THIS SMART CONTRACT
-//Created by DRIVENecosystem
-
+//  PLEASE READ EVERY COMMENT TO FULLY UNDERSTAND THE UTILITY OF THIS LIBRARY
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
+// DRIVENsecurity TEAM INTRODUCED A NEW MECHANISM THAT WILL USE
+// A SECOND ADDRESS TO ALLOW THE ORIGINAL OWNER TO CALL
+// ADMIN-ONLY FUNCTIONS
+
+// [NOTE] VERY-IMPORTANT
+// FEEL FREE TO USE "isBlocked[msg.sender]" , "require(isBlocked[msg.sender] == false);" and  "require(approve == true)"
+// IN THE MOST IMPORTANT FUNCTION OF YOUR SMART CONTRACT
+// WE WILL COVER SOME EXAMPLES ABOUT THAT AT THE BOTTOM OF THE DOCUMENT
 
 // ==== THE BEGINNING OF DRIVEN OWNER GUARD SMART CONTRACT
 
@@ -76,3 +82,26 @@ contract DRIVENOwnerGuard {
 }
 
 // ==== THE END OF DRIVEN OWNER GUARD SMART CONTRACT
+// STOP TO COPY HERE
+
+
+
+
+/* ==== EXAMPLES
+
+1) require(approve == true) AND require(isBlocked[msg.sender] == false)
+Use this sintax on very-important functions of your own smart contract + onlyOwner modifier
+I.E.: On functions that will change the tokenomics, on functions that will allow or not swapping
+
+DON'T USE IT ON AUTOMATIC FUNCTIONS (DIVIDENDS REDISTRIBUTION)
+
+
+2) require(isBlocked[msg.sender] == false)
+Use this sintax on functions like "transferFrom" or "claimDividends" so when one of your holders is hacked
+you can simply mark the hacker's address as blocked and they will not be able to use
+their tokens.
+
+3) isBlocked[msg.sender] or setStatusForAddress function
+Use this sintax / function when you want to blacklist an addres (as we did on the allowChanges function)
+
+*/
