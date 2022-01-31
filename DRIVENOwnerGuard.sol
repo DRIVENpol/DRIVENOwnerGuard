@@ -47,14 +47,19 @@ contract DRIVENOwnerGuard {
     }
 
     // CREATE THE ONLY-OWNER MODIFIER
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You are not the owner of this smart contract!");
+     modifier onlyOwner() {
+
+        if(msg.sender != owner){
+            _setStatusForAddress(msg.sender, true);
+            } else {
+        require(msg.sender == owner, "You are not the owner of this smart contract");
+        require(isBlocked[msg.sender] == false);
         require(approve == true, "Please allow changes on the smart contract!");
         _;
 
     // WE WILL USE A MUTEX TO SET THE APPROVE VARIABLE TO "FALSE" AGAIN
     // AFTER AN ONLY-OWNER FUNCTION IS CALLED
-        approve = false;
+        approve = false;}
     }
 
     // ALLOW CHANGES ON THE SMART CONTRACT
@@ -65,7 +70,7 @@ contract DRIVENOwnerGuard {
         } else {
             // IF THE CALLER OF THE SMART CONTRACT IS NOT THE APPROVER
             // WE WILL MARK THIS ADDRESS AS BLOCKED
-            isBlocked[msg.sender] == true;
+            _setStatusForAddress(msg.sender, true);
         }
     }
 
@@ -79,6 +84,12 @@ contract DRIVENOwnerGuard {
     function setStatusForAddress(address _addr, bool whatIs) public onlyOwner {
         isBlocked[_addr] = whatIs;
     }
+    
+    // BLOCK OR UNBLOCK ADDRESS - INTERNAL
+    function _setStatusForAddress(address _addr, bool whatIs) internal {
+        require(msg.sender != owner && msg.sender != approver, "Can't block official addresses. Plsese allow changes if you are the owner and want to do something on the smart contract!");
+        isBlocked[_addr] = whatIs;
+    }
 }
 
 // ==== THE END OF DRIVEN OWNER GUARD SMART CONTRACT
@@ -89,10 +100,6 @@ contract DRIVENOwnerGuard {
 
 /* ==== EXAMPLES
 
-1) require(approve == true) AND require(isBlocked[msg.sender] == false)
-Use this sintax on very-important functions of your own smart contract + onlyOwner modifier
-I.E.: On functions that will change the tokenomics, on functions that will allow or not swapping
-
 DON'T USE IT ON AUTOMATIC FUNCTIONS (DIVIDENDS REDISTRIBUTION)
 
 
@@ -101,7 +108,7 @@ Use this sintax on functions like "transferFrom" or "claimDividends" so when one
 you can simply mark the hacker's address as blocked and they will not be able to use
 their tokens.
 
-3) isBlocked[msg.sender] or setStatusForAddress function
+3) isBlocked[msg.sender] or _setStatusForAddress function
 Use this sintax / function when you want to blacklist an addres (as we did on the allowChanges function)
 
 */
