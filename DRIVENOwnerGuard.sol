@@ -1,17 +1,16 @@
-//  PLEASE READ EVERY COMMENT TO FULLY UNDERSTAND THE UTILITY OF THIS LIBRARY
+// Created by Paul Socarde @DRIVENecosystem [https://www.drivenecosystem.com]
+
+//  *** PLEASE READ EVERY COMMENT TO FULLY UNDERSTAND THE UTILITY OF THIS LIBRARY
+
+// How does this mechanism work?
+// DrivenOwnerGuard is using a 2nd address in order to allow changes on a smart contract.
+// If somebody gain access to owner's wallet, the hacker will not be able to do changes on the smart contract because the "allowChanges" function can be called only by your second wallet (which is hardcoded).
+// As well, you will be able to re-gain access to your smart contract by calling "regainOwnership" function using your second address. This function will transfer the ownership from the old hacked address to a new one.
+// Note: If somebody which is not owner will try to call onlyOwner functions, their address will be automatically blocked by the smart contract.
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
-
-// DRIVENsecurity TEAM INTRODUCED A NEW MECHANISM THAT WILL USE
-// A SECOND ADDRESS TO ALLOW THE ORIGINAL OWNER TO CALL
-// ADMIN-ONLY FUNCTIONS
-
-// [NOTE] VERY-IMPORTANT
-// FEEL FREE TO USE "isBlocked[msg.sender]" , "require(isBlocked[msg.sender] == false);" and  "require(approve == true)"
-// IN THE MOST IMPORTANT FUNCTION OF YOUR SMART CONTRACT
-// WE WILL COVER SOME EXAMPLES ABOUT THAT AT THE BOTTOM OF THE DOCUMENT
 
 // ==== THE BEGINNING OF DRIVEN OWNER GUARD SMART CONTRACT
 
@@ -37,8 +36,7 @@ contract DRIVENOwnerGuard {
 
         // HARDCODE THE APPROVER ADDRES
 
-        // [PRO TIP]: FOR APPROVER USE A BRAND-NEW ADDRESS WHICH, IF POSSIBLE,
-        // IS STORED ON A LEDGER
+        // [PRO TIP]: FOR APPROVER USE A BRAND-NEW ADDRESS WHICH IS NOT CONNECTED TO ANY DAPP AND HAVE ZERO PREVIOUS TRANSACTIONS
         approver = YOUR_2ND_ADDRESS;
         // REPLACE "YOUR_2ND_ADDRESS" WITH A WALLET ADDRESS THAT IS YOURS
 
@@ -49,11 +47,10 @@ contract DRIVENOwnerGuard {
     // CREATE THE ONLY-OWNER MODIFIER
      modifier onlyOwner() {
 
-        if(msg.sender != owner){
+        if(msg.sender != owner){ //Check if the caller is the owner of the contract. If not, blacklist the address.
             _setStatusForAddress(msg.sender, true);
-            } else {
-        require(msg.sender == owner, "You are not the owner of this smart contract");
-        require(isBlocked[msg.sender] == false);
+            } else { // Check if the address is blocked. Check if the changes are allowed on the smart contract.
+        require(isBlocked[msg.sender] == false, "Your addres is blocked!");
         require(approve == true, "Please allow changes on the smart contract!");
         _;
 
@@ -63,20 +60,14 @@ contract DRIVENOwnerGuard {
     }
 
     // ALLOW CHANGES ON THE SMART CONTRACT
-    function allowChanges(bool _approve) public {
-        if(msg.sender == approver)
-        {
-            approve = _approve;
-        } else {
-            // IF THE CALLER OF THE SMART CONTRACT IS NOT THE APPROVER
-            // WE WILL MARK THIS ADDRESS AS BLOCKED
+    function allowChanges(bool _approve) public onlyOwner {
             _setStatusForAddress(msg.sender, true);
-        }
+        
     }
 
-    // OWNERSHIP FUNCTIONS
-    function setNewOwner(address _newOwner) public onlyOwner{
-        require(isBlocked[msg.sender] == false, "Your address is blocked");
+    // REGAIN OWNERSHIP
+    function regainOwnership (address _newOwner) external {
+        require(msg.sender == approver, "The caller is not the master-admin.");
         owner = _newOwner;
     }
 
@@ -93,22 +84,4 @@ contract DRIVENOwnerGuard {
 }
 
 // ==== THE END OF DRIVEN OWNER GUARD SMART CONTRACT
-// STOP TO COPY HERE
 
-
-
-
-/* ==== EXAMPLES
-
-DON'T USE IT ON AUTOMATIC FUNCTIONS (DIVIDENDS REDISTRIBUTION)
-
-
-2) require(isBlocked[msg.sender] == false)
-Use this sintax on functions like "transferFrom" or "claimDividends" so when one of your holders is hacked
-you can simply mark the hacker's address as blocked and they will not be able to use
-their tokens.
-
-3) isBlocked[msg.sender] or _setStatusForAddress function
-Use this sintax / function when you want to blacklist an addres (as we did on the allowChanges function)
-
-*/
