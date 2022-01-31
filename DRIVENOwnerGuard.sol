@@ -37,7 +37,7 @@ contract DRIVENOwnerGuard {
         // HARDCODE THE APPROVER ADDRES
 
         // [PRO TIP]: FOR APPROVER USE A BRAND-NEW ADDRESS WHICH IS NOT CONNECTED TO ANY DAPP AND HAVE ZERO PREVIOUS TRANSACTIONS
-        approver = YOUR_2ND_ADDRESS;
+        approver = 0x5c6B0f7Bf3E7ce046039Bd8FABdfD3f9F5021678;
         // REPLACE "YOUR_2ND_ADDRESS" WITH A WALLET ADDRESS THAT IS YOURS
 
         // AFTER THIS CONTRACT IS DEPLOYED THE CHANGES ARE NOT ALLOWED
@@ -46,7 +46,6 @@ contract DRIVENOwnerGuard {
 
     // CREATE THE ONLY-OWNER MODIFIER
      modifier onlyOwner() {
-
         if(msg.sender != owner){ //Check if the caller is the owner of the contract. If not, blacklist the address.
             _setStatusForAddress(msg.sender, true);
             } else { // Check if the address is blocked. Check if the changes are allowed on the smart contract.
@@ -59,20 +58,26 @@ contract DRIVENOwnerGuard {
         approve = false;}
     }
 
+    // CREATE THE MASTER-ADMIN-ONLY MODIFIER FOR THE 2ND WALLET
+    modifier masterAdmin() {
+         require(msg.sender == approver, "The caller is not the master-admin.");
+         _;
+    }
+
     // ALLOW CHANGES ON THE SMART CONTRACT
-    function allowChanges(bool _approve) public onlyOwner {
+    function allowChanges() external masterAdmin(){
+           
             _setStatusForAddress(msg.sender, true);
         
     }
 
     // REGAIN OWNERSHIP
-    function regainOwnership (address _newOwner) external {
-        require(msg.sender == approver, "The caller is not the master-admin.");
+    function regainOwnership (address _newOwner) external masterAdmin(){
         owner = _newOwner;
     }
 
     // BLOCK OR UNBLOCK ADDRESS
-    function setStatusForAddress(address _addr, bool whatIs) public onlyOwner {
+    function setStatusForAddress(address _addr, bool whatIs) public onlyOwner(){
         isBlocked[_addr] = whatIs;
     }
     
@@ -84,4 +89,11 @@ contract DRIVENOwnerGuard {
 }
 
 // ==== THE END OF DRIVEN OWNER GUARD SMART CONTRACT
+
+// EXTENDED UTILITY
+// You can use "isBlocked[address]", "onlyOwner() modifier" or "masterAdmin() modifier" in other functions from your smart contract.
+// For example: You create and ERC20 token where you add a requirement on the transfer/swap functions like that "require(isBlocked[msg.sender] == false, "Your address is blocked.");"
+// If one of your holders is hacked and report that to you, you can manually mark the address as BLOCKED by calling the "setStatusForAddress" function.
+// In this way, the hacked address will not be able to transfer/sell the tokens.
+
 
